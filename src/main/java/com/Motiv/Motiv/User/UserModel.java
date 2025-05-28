@@ -62,7 +62,7 @@ public class UserModel {
     @Column(name="auth_id", columnDefinition = "uuid")
     private UUID authUserId;
 
-
+    
 
 
 
