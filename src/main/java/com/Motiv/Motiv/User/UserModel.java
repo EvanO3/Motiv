@@ -18,7 +18,7 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-
+/*make the app also send daily water reminders. i.e remeber to drink 3L per day */
 @Entity
 @Table(name="Users")
 public class UserModel {
@@ -62,7 +62,7 @@ public class UserModel {
     @Column(name="auth_id", columnDefinition = "uuid")
     private UUID authUserId;
 
-    
+
 
 
 
