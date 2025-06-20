@@ -1,4 +1,4 @@
-package com.Motiv.Motiv.User;
+package com.Motiv.Motiv.Models;
 
 import java.time.Instant;
 import java.util.List;
@@ -18,14 +18,15 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-
+/*make the app also send daily water reminders. i.e remeber to drink 3L per day */
 @Entity
 @Table(name="Users")
 public class UserModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID userId;
+    @Column(name="id")
+    private UUID id;
 
     @NotEmpty(message = "Name cannot be blank")
     @Column(name="name")
@@ -90,6 +91,17 @@ public class UserModel {
 
 
     
+    
+    public UserModel(String name, int age, double weight, int height){
+        this.name = name;
+        this.age = age;
+        this.weight= weight;
+        this.height=height;
+        this.createdAt= Instant.now();
+        this.updatedAt=Instant.now();
+
+    }
+    
 
     //getters and setters
 
@@ -112,13 +124,13 @@ public class UserModel {
     }
 
 
-    public UUID getUserId() {
-        return userId;
+    public UUID getId() {
+        return id;
     }
 
 
-    public void setUserId(UUID userId) {
-        this.userId = userId;
+    public void setUserId(UUID id) {
+        this.id = id;
     }
 
 
