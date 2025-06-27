@@ -15,6 +15,8 @@ import com.Motiv.Motiv.Configs.RestTemplateConfig;
 import com.Motiv.Motiv.DTOs.RegistrationDTO;
 import com.Motiv.Motiv.Exceptions.ExternalApiException;
 import com.Motiv.Motiv.Service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -55,16 +57,16 @@ public class JwtUtils {
     } 
 
     /**Validate the jwt using a get request  */
-
     public String validateJwt(String token){
 
-       final String fullUrl = baseUrl  +authUri;
+       final String fullUrl = "https://hezwtwkmoecfgpiymthk.supabase.co/auth/v1/user";
+       // baseUrl  +authUri;
        try{
         //first set the headers going to be used in the rq
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
         header.setBearerAuth(token);
-        logger.info("uri is : " + fullUrl );
+        logger.info("uri is : " + fullUrl);
         HttpEntity<String> entity = new HttpEntity<>(header);
         ResponseEntity <String> response = restTemplate.exchange(fullUrl, HttpMethod.GET, entity,String.class);
 
@@ -95,6 +97,25 @@ public class JwtUtils {
        }
     
        
+    }
+
+
+    public String getEmailFromJwt(String token){
+        try{
+            String response = validateJwt(token);
+
+            if(response !=null){
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode node = mapper.readTree(response);
+
+                return node.has("email") ? node.get("email").asText() : null;
+            }
+            return null;
+            
+        }catch(Exception e){
+        logger.error("Error accessing resource", e.getMessage());
+        throw new ExternalApiException(e.getMessage() + e.getStackTrace());         
+       }
     }
 
 }
