@@ -2,29 +2,27 @@ package com.Motiv.Motiv.Service;
 
 import org.springframework.http.HttpHeaders;
 
-import javax.print.attribute.standard.Media;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
+
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-import com.Motiv.Motiv.Configs.RestTemplateConfig;
+
 import com.Motiv.Motiv.DTOs.RegistrationDTO;
-import com.Motiv.Motiv.DTOs.UserDTO;
+
 import com.Motiv.Motiv.Exceptions.ExternalApiException;
 import com.Motiv.Motiv.Repository.UserRepository;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+
 
 @Service
 public class UserService {
