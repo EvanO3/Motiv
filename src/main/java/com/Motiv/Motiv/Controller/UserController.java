@@ -13,6 +13,9 @@ import com.Motiv.Motiv.DTOs.RegistrationDTO;
 import com.Motiv.Motiv.Service.UserService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -63,4 +66,10 @@ public class UserController {
             return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
+   
+    
+
+
 }
