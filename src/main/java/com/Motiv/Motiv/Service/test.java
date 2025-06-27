@@ -18,8 +18,8 @@ public class test {
     RestTemplateBuilder builder = new RestTemplateBuilder();
     RestTemplate restTemplate = builder.defaultHeader("apikey", "").build();
 
-    JwtUtils util = new JwtUtils(restTemplate);
-    //String result = util.validateJwt();
-   // System.out.println(result);
+//     JwtUtils util = new JwtUtils(restTemplate);
+//     String result = util.getEmailFromJwt("");
+//    System.out.println(result);
 }
 }
