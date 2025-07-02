@@ -44,7 +44,7 @@ public class JwtUtils {
     @Value("${supabase.project.auth.uri}")
     private String authUri;
 
-     
+   
 
     /*This snippet of code will take the jwt from the request header, then it will return it */
     public String getJwtFromHeader(HttpServletRequest request){
@@ -58,10 +58,10 @@ public class JwtUtils {
 
     /**Validate the jwt using a get request  */
     public String validateJwt(String token){
+    
 
-       final String fullUrl = "https://hezwtwkmoecfgpiymthk.supabase.co/auth/v1/user";
-       // baseUrl  +authUri;
        try{
+        final String fullUrl = baseUrl + authUri;
         //first set the headers going to be used in the rq
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
@@ -97,7 +97,9 @@ public class JwtUtils {
        }
     
        
+    
     }
+
 
 
     public String getEmailFromJwt(String token){
@@ -117,6 +119,51 @@ public class JwtUtils {
         throw new ExternalApiException(e.getMessage() + e.getStackTrace());         
        }
     }
+
+
+public String getRoleFromJWT(String token){
+        String response = validateJwt(token);
+    try {
+         if(response !=null){
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response);
+    
+            return node.has("role") ? node.get("role").asText(): "anon";
+    
+    }
+     return null;
+    
+} catch (Exception e) {
+     logger.error("Error accessing resource", e.getMessage());
+    throw new ExternalApiException(e.getMessage() + e.getStackTrace());      
+    
+}
+
+}
+
+
+
+public String getSubFromClaim(String token){
+       String response = validateJwt(token);
+    try {
+         if(response !=null){
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response);
+    
+            return node.has("id") ? node.get("id").asText(): null;
+    
+    }
+     return null;
+    
+} catch (Exception e) {
+     logger.error("Error accessing resource", e.getMessage());
+    throw new ExternalApiException(e.getMessage() + e.getStackTrace());      
+    
+}
+}
+
+
+//Last function to add is adding RLS from token 
 
 }
 
