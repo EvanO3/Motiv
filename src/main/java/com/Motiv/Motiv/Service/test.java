@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
-import com.Motiv.Motiv.Jwt.JwtUtils;
+import com.Motiv.Motiv.Security.JwtUtils;
 
 public class test {
 
