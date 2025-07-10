@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.Motiv.Motiv.DTOs.RegistrationDTO;
-import com.Motiv.Motiv.Service.UserService;
+import com.Motiv.Motiv.Service.AuthService;
 
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,9 +22,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AuthController {
     
 
-    private final UserService userService;
+    private final AuthService userService;
 
-    public AuthController(UserService userService){
+    public AuthController(AuthService userService){
         this.userService = userService;
     }
 
