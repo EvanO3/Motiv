@@ -16,8 +16,8 @@ public class SupabaseContextService {
 
     @Transactional
     public void setUserContext(String userId){
-        entityManager.createNativeQuery("select set_config('jwt.claims.sub', :userId, true)")
-        .setParameter("userId", userId)
+        entityManager.createNativeQuery("select set_config('jwt.claims.sub', :id, true)")
+        .setParameter("id", userId)
         .getSingleResult();
     }
     
