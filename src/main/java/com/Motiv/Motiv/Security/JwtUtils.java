@@ -16,7 +16,7 @@ import com.Motiv.Motiv.Configs.RestTemplateConfig;
 import com.Motiv.Motiv.DTOs.RegistrationDTO;
 import com.Motiv.Motiv.Exceptions.ExternalApiException;
 import com.Motiv.Motiv.Service.SupabaseContextService;
-import com.Motiv.Motiv.Service.UserService;
+import com.Motiv.Motiv.Service.AuthService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
