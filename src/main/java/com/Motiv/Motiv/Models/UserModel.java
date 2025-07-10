@@ -25,28 +25,33 @@ public class UserModel {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(name="id")
+    @Column(name="id" ,updatable=false, nullable=false)
     private UUID id;
+
+    @Override
+    public String toString() {
+        return "UserModel [id=" + id + ", name=" + name + ", age=" + age + ", weight=" + weight + ", height=" + height
+                + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", authUserId=" + authUserId + "]";
+    }
+
 
     @NotEmpty(message = "Name cannot be blank")
     @Column(name="name")
     private String name;
 
-    @NotEmpty(message ="Age cannot be empty")
     @Min(value =13, message= "Age must not be less than 13")
-    @Max(value =150, message= "Age must not be More than 150")
+    @Max(value =150, message= "Age must not be More than 120")
     @Column(name="age")
     private int age;
 
 
 
-    @NotEmpty(message ="Weight cannot be empty")
     @Min(value =30, message= "Weight bust not be less than 30kg")
-    @Max(value =250, message= "Age must not be More than 250kg")
+    @Max(value =500, message= "Age must not be More than 250kg")
     @Column(name="weight")
     private double weight;
 
-    @NotEmpty
+ 
     @Min(value = 90, message ="Height must not be less than 90cm ")
     @Max(value = 272, message ="Height must not be more than 272 cm ")
     @Column(name="height")

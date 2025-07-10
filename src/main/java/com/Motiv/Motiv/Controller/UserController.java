@@ -1,6 +1,11 @@
 package com.Motiv.Motiv.Controller;
 
-import org.apache.catalina.connector.Response;
+
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -9,67 +14,48 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.Motiv.Motiv.DTOs.RegistrationDTO;
+import com.Motiv.Motiv.DTOs.UserDTO;
+
+import com.Motiv.Motiv.Models.UserModel;
+import com.Motiv.Motiv.Security.JwtUtils;
 import com.Motiv.Motiv.Service.UserService;
 
-import jakarta.validation.Valid;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/user")
 public class UserController {
-    
-
+   
     private final UserService userService;
-
-    public UserController(UserService userService){
-        this.userService = userService;
+    private final JwtUtils jwtUtils;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+    public UserController(UserService userService, JwtUtils jwtUtils){
+        this.userService= userService;
+        this.jwtUtils=jwtUtils;
     }
 
-    
-    @PostMapping("/signup")
-    public ResponseEntity<String> signUp( @Valid @RequestBody RegistrationDTO userDTO){
-        //Might need new error checking for controller as it may always give response
+
+
+    @PostMapping("/account/setup")
+    public ResponseEntity<String>setUp(@RequestBody UserDTO userDTO, HttpServletRequest request, HttpServletResponse response){
         try{
-            ResponseEntity<String> response = userService.signUp(userDTO);
-            System.out.println("Status code is: " + response.getStatusCode());
-            
-            if(response.getStatusCode() == HttpStatus.CREATED){
-                return new ResponseEntity<>(response.getBody(), HttpStatus.CREATED);
-            }else{
-                return  new ResponseEntity<>("Failed to sign up user", HttpStatus.BAD_REQUEST);
+            String jwtToken = jwtUtils.getJwtFromHeader(request);
+            if(jwtToken ==null || jwtToken.isEmpty()){
+                return new ResponseEntity<>("Failed to retrieve JWT Token",HttpStatus.BAD_REQUEST);
             }
 
-           
-
+            userService.profileSetUp(jwtToken, userDTO);
+            return new ResponseEntity<>("User Successfully Saved", HttpStatus.CREATED);
         }catch(Exception e){
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-          
+            logger.error("Logging DB error {}", e.getMessage());
+            logger.error("error found", e);
+           return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR); 
+
         }
-        
-    }
 
-    
-
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@Valid  @RequestBody RegistrationDTO registrationDTO){
-        try{
-            ResponseEntity<String> response = userService.login(registrationDTO);
-           if(response.getStatusCode() == HttpStatus.OK){
-               return new ResponseEntity<>(response.getBody(), HttpStatus.OK);
-
-           }
-           return new ResponseEntity<>(response.getBody(), response.getStatusCode());
-        }catch(Exception e){
-            return new ResponseEntity<>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
-        }
     }
 
 
-   
     
-
-
 }

@@ -1,4 +1,5 @@
-package com.Motiv.Motiv.Jwt;
+package com.Motiv.Motiv.Security
+;
 
 
 
@@ -14,7 +15,10 @@ import org.springframework.http.HttpHeaders;
 import com.Motiv.Motiv.Configs.RestTemplateConfig;
 import com.Motiv.Motiv.DTOs.RegistrationDTO;
 import com.Motiv.Motiv.Exceptions.ExternalApiException;
-import com.Motiv.Motiv.Service.UserService;
+import com.Motiv.Motiv.Service.SupabaseContextService;
+import com.Motiv.Motiv.Service.AuthService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -28,11 +32,14 @@ import jakarta.servlet.http.HttpServletRequest;
 @Component
 public class JwtUtils {
 
+    private final SupabaseContextService supabaseContextService;
+
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
     private final RestTemplate restTemplate;
 
-    public JwtUtils(RestTemplate restTemplate){
+    public JwtUtils(RestTemplate restTemplate, SupabaseContextService supabaseContextService){
         this.restTemplate = restTemplate;
+        this.supabaseContextService = supabaseContextService;
     }    
    
 
@@ -42,7 +49,7 @@ public class JwtUtils {
     @Value("${supabase.project.auth.uri}")
     private String authUri;
 
-     
+   
 
     /*This snippet of code will take the jwt from the request header, then it will return it */
     public String getJwtFromHeader(HttpServletRequest request){
@@ -55,16 +62,16 @@ public class JwtUtils {
     } 
 
     /**Validate the jwt using a get request  */
-
     public String validateJwt(String token){
+    
 
-       final String fullUrl = baseUrl  +authUri;
        try{
+        final String fullUrl = baseUrl + authUri;
         //first set the headers going to be used in the rq
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_JSON);
         header.setBearerAuth(token);
-        logger.info("uri is : " + fullUrl );
+        logger.info("uri is : " + fullUrl);
         HttpEntity<String> entity = new HttpEntity<>(header);
         ResponseEntity <String> response = restTemplate.exchange(fullUrl, HttpMethod.GET, entity,String.class);
 
@@ -95,7 +102,78 @@ public class JwtUtils {
        }
     
        
+    
     }
+
+
+
+    public String getEmailFromJwt(String token){
+        try{
+            String response = validateJwt(token);
+
+            if(response !=null){
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode node = mapper.readTree(response);
+
+                return node.has("email") ? node.get("email").asText() : null;
+            }
+            return null;
+            
+        }catch(Exception e){
+        logger.error("Error accessing resource", e.getMessage());
+        throw new ExternalApiException(e.getMessage() + e.getStackTrace());         
+       }
+    }
+
+
+public String getRoleFromJWT(String token){
+        String response = validateJwt(token);
+    try {
+         if(response !=null){
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response);
+    
+            return node.has("role") ? node.get("role").asText(): "anon";
+    
+    }
+     return null;
+    
+} catch (Exception e) {
+     logger.error("Error accessing resource", e.getMessage());
+    throw new ExternalApiException(e.getMessage() + e.getStackTrace());      
+    
+}
+
+}
+
+
+
+public String getSubFromClaim(String token){
+       String response = validateJwt(token);
+    try {
+         if(response !=null){
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(response);
+    
+            return node.has("id") ? node.get("id").asText(): null;
+    
+    }
+     return null;
+    
+} catch (Exception e) {
+     logger.error("Error accessing resource", e.getMessage());
+    throw new ExternalApiException(e.getMessage() + e.getStackTrace());      
+    
+}
+}
+
+
+//Last function to add is adding RLS from token helper method
+
+public void applyRLSContextFromToken(String token){
+    String userId = getSubFromClaim(token);
+    supabaseContextService.setUserContext(userId);
+}
 
 }
 

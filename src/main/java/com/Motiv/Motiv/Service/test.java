@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.web.client.RestTemplate;
 
-import com.Motiv.Motiv.Jwt.JwtUtils;
+import com.Motiv.Motiv.Security.JwtUtils;
 
 public class test {
 
@@ -18,8 +18,8 @@ public class test {
     RestTemplateBuilder builder = new RestTemplateBuilder();
     RestTemplate restTemplate = builder.defaultHeader("apikey", "").build();
 
-    JwtUtils util = new JwtUtils(restTemplate);
-    //String result = util.validateJwt();
-   // System.out.println(result);
+//     JwtUtils util = new JwtUtils(restTemplate);
+//     String result = util.getEmailFromJwt("");
+//    System.out.println(result);
 }
 }
