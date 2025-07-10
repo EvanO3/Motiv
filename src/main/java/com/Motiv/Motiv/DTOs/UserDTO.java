@@ -2,6 +2,8 @@ package com.Motiv.Motiv.DTOs;
 
 import java.util.UUID;
 
+
+
 public class UserDTO {
     
 
@@ -9,7 +11,7 @@ public class UserDTO {
     private double weight;
     private int height;
     private int age;
-
+    private UUID authUserId;
 
 
     public String getName() {
@@ -46,6 +48,18 @@ public class UserDTO {
 
     }
 
+    public UserDTO(String name, double weight, int height, int age, UUID authUserId){
+        this.name= name;
+        this.weight=weight;
+        this.height=height;
+        this.age= age;
+        this.authUserId = authUserId;
+    }
+
+
+    public UserDTO(){
+
+    }
 
     public int getAge(){
         return age;
