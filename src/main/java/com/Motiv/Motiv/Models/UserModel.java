@@ -1,17 +1,25 @@
 package com.Motiv.Motiv.Models;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
+import com.Motiv.Motiv.Enums.ActivityLevel;
+import com.Motiv.Motiv.Enums.Experience;
+import com.Motiv.Motiv.Enums.Roles;
 
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Max;
@@ -65,9 +73,39 @@ public class UserModel {
     private Instant updatedAt;
 
 
+    @Column(name="role")
+    @Enumerated(EnumType.STRING)
+    private Roles roles;
+
+
+    public List<GoalsModel> getGoals() {
+        return goals;
+    }
+
+
+    public void setGoals(List<GoalsModel> goals) {
+        this.goals = goals;
+    }
+
+
     @Column(name="auth_id", columnDefinition = "uuid")
     private UUID authUserId;
 
+    @OneToMany(mappedBy="user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List <GoalsModel> goals;
+        
+
+    //add experience level with training
+    @Column(name="experience")
+    @Enumerated(EnumType.STRING)
+    private Experience experience;
+
+    //add the users activity level
+    @Column(name="activity_status")
+    @Enumerated(EnumType.STRING)
+    private ActivityLevel activityLevel;
+   
+    
 
 
 
@@ -84,24 +122,57 @@ public class UserModel {
 
     //Args
 
-    public UserModel(String name, int age, double weight, int height, UUID authUserId){
+    public UserModel(String name, int age, double weight, int height, Experience experience, ActivityLevel activityLevel, UUID authUserId){
         this.name = name;
         this.age = age;
         this.weight= weight;
         this.height=height;
+        this.roles =Roles.USER;
+        this.experience= experience;
+        this.activityLevel=activityLevel;
         this.authUserId= authUserId;
         this.createdAt= Instant.now();
         this.updatedAt=Instant.now();
     }
 
+    public Roles getRoles(){
+        return roles;
+    }
 
+
+    public void setRoles(Roles roles){
+        this.roles =roles;
+    }
     
     
-    public UserModel(String name, int age, double weight, int height){
+    public Experience getExperience() {
+        return experience;
+    }
+
+
+    public void setExperience(Experience experience) {
+        this.experience = experience;
+    }
+
+
+    public ActivityLevel getActivityLevel() {
+        return activityLevel;
+    }
+
+
+    public void setActivityLevel(ActivityLevel activityLevel) {
+        this.activityLevel = activityLevel;
+    }
+
+
+    public UserModel(String name, int age, double weight, int height, Experience experience, ActivityLevel activityLevel){
         this.name = name;
         this.age = age;
         this.weight= weight;
         this.height=height;
+        this.experience = experience;
+        this.activityLevel=activityLevel;
+        this.roles =Roles.USER;
         this.createdAt= Instant.now();
         this.updatedAt=Instant.now();
 
@@ -109,6 +180,9 @@ public class UserModel {
     
 
     //getters and setters
+
+
+  
 
 
     public String getName(){
