@@ -7,7 +7,8 @@ import java.util.UUID;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.Motiv.Motiv.Annotations.ValidDateRange;
-import com.Motiv.Motiv.Enums.Type;
+import com.Motiv.Motiv.Enums.Status;
+import com.Motiv.Motiv.Enums.GoalType;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,7 +41,7 @@ public class GoalsModel {
 
     @Column(name="goal_type")
     @Enumerated(EnumType.STRING)
-    private Type goalType;
+    private GoalType goalType;
 
     // in service method, validate the dates to ensure the start date cannot come after the endDate
     
@@ -50,9 +51,28 @@ public class GoalsModel {
     @Column(name="deadline")
     private LocalDate endDate;
 
+   
+
+
     @Column(name="target_weight")
     @Min(value=90, message="Minimum value for target weight must be >=90")
     private Double targetWeight;
+
+    @Column(name="goal_status")
+    @Enumerated(EnumType.STRING)
+    private Status goalStatus;
+
+
+    public GoalsModel(){
+
+    }
+
+    public GoalsModel(GoalType goalType, Double targetWeight,UserModel user){
+        this.goalType = goalType;
+        this.targetWeight= targetWeight;
+        this.user= user;
+    
+    }
 
     public LocalDate getStartDate() {
         return startDate;
@@ -71,6 +91,35 @@ public class GoalsModel {
 
     public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+
+     public GoalType getGoalType() {
+        return goalType;
+    }
+
+
+    public void setGoalType(GoalType goalType) {
+        this.goalType = goalType;
+    }
+
+
+    public Double getTargetWeight() {
+        return targetWeight;
+    }
+
+
+    public void setTargetWeight(Double targetWeight) {
+        this.targetWeight = targetWeight;
+    }
+
+
+    public Status getGoalStatus() {
+        return goalStatus;
+    }
+
+
+    public void setGoalStatus(Status goalStatus) {
+        this.goalStatus = goalStatus;
     }
 
 
