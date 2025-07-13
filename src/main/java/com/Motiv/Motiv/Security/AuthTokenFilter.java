@@ -11,7 +11,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.Motiv.Motiv.Enums.Roles;
+import com.Motiv.Motiv.Repository.UserRepository;
 import com.Motiv.Motiv.Security.JwtUtils;
+import com.Motiv.Motiv.Service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -36,7 +39,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtils jwtUtils;
 
-    
+    @Autowired
+    private UserService userService;
 
     private static final Logger logger = LoggerFactory.getLogger(AuthTokenFilter.class);
 
@@ -45,13 +49,14 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         try{
             String jwt= parseJwt(request);
+          
             logger.info("Request: {} {}",request.getMethod(), request.getRequestURI());
 
             if(jwt !=null && !jwt.isEmpty()){
                 //if there is a jwt log the jwt
 
                 logger.info("JWT being Processed: {}",jwt.substring(9,Math.min(10, jwt.length())) + "..." );
-
+                 
                 //Validating to see if the jwt passed is valid
                 String jsonResponse =jwtUtils.validateJwt(jwt);
                 ObjectMapper mapper = new ObjectMapper();
@@ -61,12 +66,18 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
                 if(jsonResponse !=null){
                     String email = node.has("email") ? node.get("email").asText() : null;
-                    String role = node.has("role") ? node.get("role").asText() : "anon";
-                     logger.info("Token validation - email: {}, role: {}", email, role);
+                    String supabaseRole = node.has("role") ? node.get("role").asText() : "anon";
+                    
+                    
+                     logger.info("Token validation - email: {}, role: {}", email, supabaseRole);
 
 
-                     if(email !=null && "authenticated".equals(role)){
-                        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_USER"));
+                     if(email !=null && "authenticated".equals(supabaseRole)){
+                         //Query the users table, using the auth id then get the users role from there
+                        Roles appRole= userService.getUserRole(jwt);
+                        logger.info("The users set role is: {}", appRole);
+
+                        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + appRole));
                      UsernamePasswordAuthenticationToken authentication = 
                          new UsernamePasswordAuthenticationToken(email, null, authorities);
                      

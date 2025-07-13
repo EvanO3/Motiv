@@ -5,6 +5,8 @@ target/
 !**/src/test/**/target/
 
 src/main/resources/application.properties
+src/main/java/com/Motiv/Motiv/Service/test.java
+
 ### STS ###
 .apt_generated
 .classpath
@@ -32,3 +34,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+

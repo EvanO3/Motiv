@@ -2,6 +2,9 @@ package com.Motiv.Motiv.DTOs;
 
 import java.util.UUID;
 
+import com.Motiv.Motiv.Enums.ActivityLevel;
+import com.Motiv.Motiv.Enums.Experience;
+
 
 
 public class UserDTO {
@@ -12,7 +15,8 @@ public class UserDTO {
     private int height;
     private int age;
     private UUID authUserId;
-
+    private Experience experience;
+    private ActivityLevel activityLevel;
 
     public String getName() {
         return name;
@@ -39,21 +43,45 @@ public class UserDTO {
     }
 
 
-    public UserDTO(String name, double weight, int height, int age){
+    public UserDTO(String name, double weight, int height, int age, Experience experience, ActivityLevel activityLevel){
         this.name= name;
         this.weight=weight;
         this.height=height;
         this.age= age;
+        this.experience= experience;
+        this.activityLevel= activityLevel;
 
 
     }
 
-    public UserDTO(String name, double weight, int height, int age, UUID authUserId){
+    public UserDTO(String name, double weight, int height, int age, Experience experience, ActivityLevel activityLevel, UUID authUserId){
         this.name= name;
         this.weight=weight;
         this.height=height;
         this.age= age;
+        this.experience= experience;
+        this.activityLevel= activityLevel;
         this.authUserId = authUserId;
+    }
+
+
+    public Experience getExperience() {
+        return experience;
+    }
+
+
+    public void setExperience(Experience experience) {
+        this.experience = experience;
+    }
+
+
+    public ActivityLevel getActivityLevel() {
+        return activityLevel;
+    }
+
+
+    public void setActivityLevel(ActivityLevel activityLevel) {
+        this.activityLevel = activityLevel;
     }
 
 
