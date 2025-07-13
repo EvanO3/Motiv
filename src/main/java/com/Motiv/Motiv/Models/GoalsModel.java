@@ -20,6 +20,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Min;
 
 @Entity
 @Table(name="Goals")
@@ -37,14 +38,21 @@ public class GoalsModel {
     @JoinColumn(name="user_id")
     private UserModel user;
 
-    
+    @Column(name="goal_type")
     @Enumerated(EnumType.STRING)
     private Type goalType;
 
     // in service method, validate the dates to ensure the start date cannot come after the endDate
     
+    @Column(name="start_date")
     private LocalDate startDate;
 
+    @Column(name="deadline")
+    private LocalDate endDate;
+
+    @Column(name="target_weight")
+    @Min(value=90, message="Minimum value for target weight must be >=90")
+    private Double targetWeight;
 
     public LocalDate getStartDate() {
         return startDate;
@@ -66,5 +74,5 @@ public class GoalsModel {
     }
 
 
-    private LocalDate endDate;
+
 }
