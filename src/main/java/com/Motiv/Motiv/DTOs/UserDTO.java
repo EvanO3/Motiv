@@ -6,7 +6,7 @@ import com.Motiv.Motiv.Enums.ActivityLevel;
 import com.Motiv.Motiv.Enums.Experience;
 
 
-
+/**Must add Error checking i.e validations (@not null etc) */
 public class UserDTO {
     
 
